@@ -15,11 +15,10 @@ export interface CustomButtonProps {
   rightIcon?: any
 }
 
-// export interface SearchResult {
-//   userCount: number
-//   pageInfo: PageInfo
-//   nodes: UsersNode[]
-// }
+export interface UserList {
+  userCount: number
+  users: UsersNode[]
+}
 
 export interface PageInfo {
   hasNextPage: boolean
