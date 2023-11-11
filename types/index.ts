@@ -3,7 +3,7 @@ import { MouseEventHandler } from "react"
 
 export interface SearchBarProps {
   placeholder?: string
-  handleSearch: (e:any) => void
+  handleSearch: (input:string) => void
 }
 
 export interface CustomButtonProps {
@@ -13,4 +13,33 @@ export interface CustomButtonProps {
   btnType?: 'button' | 'submit'
   textStyles?: string
   rightIcon?: any
+}
+
+// export interface SearchResult {
+//   userCount: number
+//   pageInfo: PageInfo
+//   nodes: UsersNode[]
+// }
+
+export interface PageInfo {
+  hasNextPage: boolean
+  hasPreviousPage: boolean
+}
+
+export interface UsersNode {
+  id: string
+  login: string
+  repositories: Repositories
+}
+
+export interface Repositories {
+  totalCount: number
+  nodes: ReposNode[]
+}
+
+export interface ReposNode {
+  id: string
+  name: string
+  description?: string
+  stargazerCount: number
 }

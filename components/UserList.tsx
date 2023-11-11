@@ -1,55 +1,91 @@
 "use client"
 
+import clsx from 'clsx'
 import { Disclosure } from '@headlessui/react'
 import { ChevronUpIcon, StarIcon } from '@heroicons/react/20/solid'
 import SearchBar from './base/SearchBar'
 import { EmptyUser } from '@/components'
+import { fetchUsersWithGrphql } from '@/utils'
+import { useState } from 'react'
+import { UsersNode } from '@/types'
 
 const UserList = () => {
-  function onSearch (queryParams: string) {
-    console.log('search', queryParams)
-  }
+  const initialUsers = [{
+    id: '',
+    login: '',
+    repositories: {
+      totalCount: 0,
+      nodes: [
+        {
+          id: '',
+          name: '',
+          description: '',
+          stargazerCount: 0
+        }
+      ]
+    }
+  }]
 
+  const [users, setUsers] = useState<UsersNode[]>(initialUsers)
+  const [userCount, setUserCount] = useState(0)
+
+  async function getUsers (params: string) {
+    const { userCount, nodes, pageInfo } = await fetchUsersWithGrphql(params)
+    await setUsers(nodes)
+    await setUserCount(userCount)
+  }
+  
   return (
     <>
       <SearchBar
         placeholder="Search User"
-        handleSearch={(val) => onSearch(val)}
+        handleSearch={(val) => getUsers(val)}
       />
       
-      <div className="p-6 my-4 max-w-xl mx-auto bg-white border border-gray-300 rounded-lg shadow min-h-[500px]">
-        <div className="mx-auto w-full max-w-xl rounded-2xl bg-white">
-          <Disclosure>
-            {({ open }) => (
-              <>
-                <Disclosure.Button className="flex w-full justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-left text-sm font-bold text-gray-900 hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-gray-500/75">
-                  <span className="font-bold">What is your refund policy?</span>
-                  <ChevronUpIcon
-                    className={`${
-                      open ? 'rotate-180 transform' : ''
-                    } h-5 w-5 font-bold`}
-                  />
-                </Disclosure.Button>
-                <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm border border-gray-300 rounded-lg my-2">
-                  <div className="flex justify-between">
-                    <h6 className="font-bold text-gray-800 mb-2">Repo title</h6>
-                    <div className="flex gap-2">
-                      <h6 className="font-bold text-gray-800 mb-2">8</h6>
-                      <StarIcon className="h-4 w-4 stroke-gray-800 stroke-2 fill-none" />
-                    </div>
-                  </div>
-                  <hr />
-                  <p className="text-gray-500 my-2">
-                    If you're unhappy with your purchase for any reason, email us
-                    within 90 days and we'll refund you in full, no questions asked.
-                  </p>
-                </Disclosure.Panel>
-              </>
-            )}
-          </Disclosure>
-        </div>
-        
-        <EmptyUser />
+      <div className="px-6 my-4 py-10 max-w-xl mx-auto bg-white border border-gray-300 rounded-lg shadow min-h-[300px]">
+      { userCount > 0 
+        ? users.map(({ id, login, repositories: { totalCount, nodes } }) => (
+          <div className="mx-auto w-full max-w-xl rounded-2xl bg-white mb-3" key={id}>
+            <Disclosure>
+              {({ open }) => (
+                <>
+                  <Disclosure.Button
+                    className={clsx(
+                      'flex w-full justify-between rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-left text-sm font-bold text-gray-900 hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-gray-500/75',
+                      open && 'bg-green-100 border-green-500 hover:bg-green-200'
+                    )}
+                  >
+                    <span className="font-bold">{ login }</span>
+                    <ChevronUpIcon
+                      className={clsx(
+                        'h-5 w-5 font-bold',
+                        open && 'rotate-180 transform'
+                      )}
+                    />
+                  </Disclosure.Button>
+
+                  { totalCount > 0 && nodes.map((repo) =>
+                  (
+                    <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm border border-gray-300 rounded-lg my-2" key={repo.id}>
+                      <div className="flex justify-between">
+                        <h6 className="font-bold text-gray-800 mb-2">{ repo.name }</h6>
+                        <div className="flex gap-2">
+                          <h6 className="font-bold text-gray-800 mb-2">{ repo.stargazerCount}</h6>
+                          <StarIcon className="h-4 w-4 stroke-gray-800 stroke-2 fill-none" />
+                        </div>
+                      </div>
+                      <hr />
+                      <p className="text-gray-500 my-2">
+                       { repo.description ? repo.description : '-' }
+                      </p>
+                    </Disclosure.Panel>
+                  ))}
+                </>
+              )}
+            </Disclosure>
+          </div>
+        ))
+        : (<EmptyUser text='No Data Found' />)}
       </div>
     </>
   )
