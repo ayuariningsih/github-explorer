@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 import { Disclosure } from '@headlessui/react'
-import { ChevronUpIcon, StarIcon } from '@heroicons/react/20/solid'
+import { ChevronDownIcon, StarIcon } from '@heroicons/react/20/solid'
 import SearchBar from './base/SearchBar'
 import { EmptyUser } from '@/components'
 import { fetchUsersWithGrphql } from '@/utils'
@@ -56,7 +56,7 @@ const UserList = () => {
                     )}
                   >
                     <span className="font-bold">{ login }</span>
-                    <ChevronUpIcon
+                    <ChevronDownIcon
                       className={clsx(
                         'h-5 w-5 font-bold',
                         open && 'rotate-180 transform'
