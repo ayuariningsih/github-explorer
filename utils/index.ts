@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const BASE_URL = 'https://api.github.com/graphql'
-const ACCESS_TOKEN = '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'
+const API_URL = process.env.API_URL
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN
 
 export async function fetchUsersWithGrphql(query:string) {
   const fetchUrl = axios({
-    url: BASE_URL,
+    url: API_URL,
     method: 'post',
     headers: {
       Authorization: `Bearer ${ACCESS_TOKEN}`
