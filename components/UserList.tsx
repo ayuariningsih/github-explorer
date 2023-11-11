@@ -44,8 +44,8 @@ const UserList = () => {
       
       <div className="px-6 my-4 py-10 max-w-xl mx-auto bg-white border border-gray-300 rounded-lg shadow min-h-[300px]">
       { userCount > 0 
-        ? users.map(({ id, login, repositories: { totalCount, nodes } }) => (
-          <div className="mx-auto w-full max-w-xl rounded-2xl bg-white mb-3" key={id}>
+        ? users.map(({ id, login, repositories }, index) => (
+          <div className="mx-auto w-full max-w-xl rounded-2xl bg-white mb-3" key={id || index}>
             <Disclosure>
               {({ open }) => (
                 <>
@@ -64,7 +64,7 @@ const UserList = () => {
                     />
                   </Disclosure.Button>
 
-                  { totalCount > 0 && nodes.map((repo) =>
+                  { repositories && repositories.totalCount > 0 && repositories.nodes.map((repo) =>
                   (
                     <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm border border-gray-300 rounded-lg my-2" key={repo.id}>
                       <div className="flex justify-between">
@@ -85,7 +85,7 @@ const UserList = () => {
             </Disclosure>
           </div>
         ))
-        : (<EmptyUser text='No Data Found' />)}
+        : (<EmptyUser />)}
       </div>
     </>
   )
