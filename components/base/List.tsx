@@ -15,17 +15,19 @@ const UserList = ({ userCount, users }: UserList) => {
           <>
             <Disclosure.Button
               className={clsx(
-                'flex w-full justify-between rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-left text-sm font-bold text-gray-900 hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-gray-500/75',
+                'flex h-10 w-full justify-between rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-left text-sm font-bold text-gray-900 hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-gray-500/75',
                 open && 'bg-green-100 border-green-500 hover:bg-green-200'
               )}
             >
               <span className="font-bold">{ login }</span>
-              <ChevronDownIcon
-                className={clsx(
-                  'h-5 w-5 font-bold',
-                  open && 'rotate-180 transform'
-                )}
-              />
+              { repositories && repositories.totalCount > 0 && (
+                <ChevronDownIcon
+                  className={clsx(
+                    'h-5 w-5 font-bold',
+                    open && 'rotate-180 transform'
+                  )}
+                />
+              )}
             </Disclosure.Button>
 
             { repositories && repositories.totalCount > 0 && repositories.nodes.map((repo) =>

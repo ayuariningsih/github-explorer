@@ -3,7 +3,13 @@ import { MouseEventHandler } from "react"
 
 export interface SearchBarProps {
   placeholder?: string
-  handleSearch: (input:string) => void
+  handleSearch: (input:Params) => void
+}
+
+export interface Params {
+  name: string
+  limit: number
+  after: string
 }
 
 export interface CustomButtonProps {
@@ -22,7 +28,7 @@ export interface UserList {
 
 export interface PageInfo {
   hasNextPage: boolean
-  hasPreviousPage: boolean
+  endCursor: string
 }
 
 export interface UsersNode {

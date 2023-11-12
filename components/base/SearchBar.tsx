@@ -5,6 +5,7 @@ import { CustomButton } from ".."
 import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { updateSearchParams } from "@/utils"
 
 const SearchBar = ({ placeholder, handleSearch }: SearchBarProps) => {
   const router = useRouter()
@@ -15,8 +16,16 @@ const SearchBar = ({ placeholder, handleSearch }: SearchBarProps) => {
   async function onSearch() {
     if (input === '') return 
 
-    await handleSearch(input)
-    router.push(`/?name=${input}`)
+    const searchParams = {
+      name: input.toLowerCase(),
+      limit: 5,
+      after: ''
+    }
+
+    await handleSearch(searchParams)
+    const newPathname = updateSearchParams(searchParams)
+    
+    router.push(newPathname)
   }
 
   function clear () {
@@ -25,9 +34,17 @@ const SearchBar = ({ placeholder, handleSearch }: SearchBarProps) => {
 
   useEffect(() => {
     const queryParams = params.get('name') || ''
+    const limit = params.get('limit') || 5
+    const afterData = params.get('after') || ''
+
+    const searchParams = {
+      name: queryParams.toLowerCase(),
+      limit: Number(limit),
+      after: afterData
+    }
 
     if (queryParams) {
-      handleSearch(queryParams)
+      handleSearch(searchParams)
       setInput(queryParams)
     }
   }, [])
